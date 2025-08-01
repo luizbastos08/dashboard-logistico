@@ -46,7 +46,6 @@
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 9999px;
-            background-color: rgba(0, 163, 168, 0.63);
             color: white;
             font-size: 1.25rem;
             font-weight: bold;
@@ -56,18 +55,63 @@
             border: 1px solid white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transform: translate(-50%, -50%);
+            transition: background-color 0.5s ease;
+            cursor: pointer;
+        }
+
+        .bg-sla-map-green { background-color: rgba(4, 188, 180, 0.7); }
+        .bg-sla-map-amber { background-color: rgba(255, 193, 7, 0.7); }
+        .bg-sla-map-red   { background-color: rgba(244, 67, 54, 0.7); }
+
+        /* --- INICIO DE MODIFICACIONES: ESTILOS DEL TOOLTIP --- */
+        #map-tooltip {
+            position: absolute;
+            display: none;
+            background-color: #1e293b; /* Color de fondo modificado para mejor legibilidad */
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #475569; /* Borde sutil añadido */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+            pointer-events: none;
+            max-width: 320px;
+        }
+        /* --- FIN DE MODIFICACIONES: ESTILOS DEL TOOLTIP --- */
+
+        #map-tooltip h4 {
+            font-weight: 700;
+            color: #04bcb4;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.5rem;
+        }
+        #map-tooltip ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #map-tooltip li {
+            font-size: 0.875rem;
+            padding: 0.25rem 0;
+        }
+        #map-tooltip .placa {
+            font-weight: 500;
+        }
+        #map-tooltip .timers {
+            font-family: monospace;
+            color: #cbd5e1;
         }
     </style>
 </head>
 <body class="text-deacero-dark">
 
     <div class="min-h-screen flex flex-col">
-        <!-- HEADER: Filtros y Título -->
+        <!-- HEADER -->
         <header class="bg-deacero-dark text-white p-4 shadow-lg z-10">
             <div class="container mx-auto flex flex-wrap justify-between items-center gap-4">
                 <img src="assets/Stefanini.png" alt="Logo Stefanini Group" class="h-10">
                 <div class="flex flex-wrap items-center gap-4">
-                    <!-- Dropdown de Periodo -->
                     <div class="relative dropdown">
                         <button id="time-filter-btn" class="filter-btn flex items-center gap-2 bg-white/10 p-2 rounded-lg transition-colors duration-300">
                             <i data-lucide="calendar" class="w-5 h-5 text-deacero-turquoise"></i>
@@ -80,7 +124,6 @@
                             <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="mensual">Mensual</a></li>
                         </ul>
                     </div>
-                    <!-- Dropdown de Transportistas -->
                     <div class="relative dropdown">
                         <button id="carrier-filter-btn" class="filter-btn flex items-center gap-2 bg-white/10 p-2 rounded-lg transition-colors duration-300">
                             <i data-lucide="truck" class="w-5 h-5 text-deacero-turquoise"></i>
@@ -95,7 +138,6 @@
                             <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="Fletes del Sur">Fletes del Sur</a></li>
                         </ul>
                     </div>
-                    <!-- Dropdown de Productos -->
                     <div class="relative dropdown">
                         <button id="product-filter-btn" class="filter-btn flex items-center gap-2 bg-white/10 p-2 rounded-lg transition-colors duration-300">
                             <i data-lucide="package" class="w-5 h-5 text-deacero-turquoise"></i>
@@ -116,10 +158,10 @@
             </div>
         </header>
 
-        <!-- Contenido Principal -->
+        <!-- MAIN CONTENT -->
         <main class="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
 
-            <!-- Fila de KPI Cards Principales -->
+            <!-- KPIs -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                  <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-deacero-turquoise">
                     <div class="flex items-center justify-between">
@@ -166,13 +208,11 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Fila de KPIs de Tiempos Promedio por Etapa -->
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
                 <h2 class="text-xl font-semibold col-span-full">Tiempos Promedio por Etapa</h2>
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
                     <div class="bg-blue-100 p-3 rounded-lg"><i data-lucide="log-in" class="w-6 h-6 text-blue-500"></i></div>
-                    <div><p class="text-sm text-gray-500">Portón</p><p id="kpi-avg-porton" class="text-2xl font-bold text-deacero-dark">0 min</p></div>
+                    <div><p class="text-sm text-gray-500">Portón</p><p id="kpi-avg-porton-de-entrada" class="text-2xl font-bold text-deacero-dark">0 min</p></div>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
                     <div class="bg-green-100 p-3 rounded-lg"><i data-lucide="scale" class="w-6 h-6 text-green-500"></i></div>
@@ -196,15 +236,14 @@
                 </div>
             </div>
 
-            <!-- Fila de Gráficas -->
+            <!-- CHARTS -->
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
                 <div id="stage-chart-container" class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
                     <h3 id="stage-chart-title" class="text-lg font-semibold mb-4">Ubicación de Camiones en Planta</h3>
                     <div class="relative h-96 w-full bg-gray-100 rounded-lg">
                         <img src="assets/Mapa de la Planta.png" alt="Mapa de la planta" class="absolute top-0 left-0 w-full h-full object-contain" onerror="this.style.display='none'">
-                        <!-- Indicadores del Mapa -->
-                        <div id="map-indicator-0" class="map-indicator" style="top: 85%; left: 35%;">0</div> <!-- Báscula de salida -->
-                        <div id="map-indicator-1" class="map-indicator" style="top: 65%; left: 43%;">0</div> <!-- Báscula entrada -->
+                        <div id="map-indicator-0" class="map-indicator" style="top: 85%; left: 35%;">0</div> <!-- Báscula Salida -->
+                        <div id="map-indicator-1" class="map-indicator" style="top: 65%; left: 43%;">0</div> <!-- Báscula Entrada -->
                         <div id="map-indicator-2" class="map-indicator" style="top: 50%; left: 45%;">0</div> <!-- Zona de espera -->
                         <div id="map-indicator-3" class="map-indicator" style="top: 50%; left: 60%;">0</div> <!-- Zona de carga --> 
                         <div id="map-indicator-4" class="map-indicator" style="top: 45%; left: 30%;">0</div> <!-- Zona de descarga --> 
@@ -219,7 +258,7 @@
                 </div>
             </div>
 
-            <!-- Tabla Detallada de Camiones -->
+            <!-- DETAIL TABLE -->
             <div id="detail-table-container" class="bg-white rounded-lg shadow-md overflow-hidden">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold">Detalle de Camiones en Planta</h3>
@@ -243,38 +282,44 @@
         </main>
     </div>
 
+    <div id="map-tooltip"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            const STAGES = ['Portón de entrada', 'Báscula Entrada', 'Zona de espera', 'Zona de carga', 'Zona de descarga', 'Báscula Salida'];
+            const STAGES = ['Báscula Salida', 'Báscula Entrada', 'Zona de espera', 'Zona de carga', 'Zona de descarga', 'Portón de entrada'];
             const now = new Date();
 
             const realTimeTruckData = [
                 { placa: 'GHI-101', transportista: 'Transportes Veloz', producto: 'Varilla Corrugada', history: [
-                    { stage: STAGES[0], startTime: new Date(now.getTime() - 65 * 60000), endTime: new Date(now.getTime() - 60 * 60000) },
+                    { stage: STAGES[5], startTime: new Date(now.getTime() - 65 * 60000), endTime: new Date(now.getTime() - 60 * 60000) },
                     { stage: STAGES[1], startTime: new Date(now.getTime() - 60 * 60000), endTime: new Date(now.getTime() - 50 * 60000) },
                     { stage: STAGES[2], startTime: new Date(now.getTime() - 50 * 60000), endTime: new Date(now.getTime() - 20 * 60000) },
                     { stage: STAGES[3], startTime: new Date(now.getTime() - 20 * 60000), endTime: null },
                 ]},
                 { placa: 'JKL-212', transportista: 'Fletes del Sur', producto: 'Varilla Corrugada', history: [
-                    { stage: STAGES[0], startTime: new Date(now.getTime() - 80 * 60000), endTime: new Date(now.getTime() - 75 * 60000) },
+                    { stage: STAGES[5], startTime: new Date(now.getTime() - 80 * 60000), endTime: new Date(now.getTime() - 75 * 60000) },
                     { stage: STAGES[1], startTime: new Date(now.getTime() - 75 * 60000), endTime: new Date(now.getTime() - 65 * 60000) },
                     { stage: STAGES[2], startTime: new Date(now.getTime() - 65 * 60000), endTime: null },
                 ]},
                 { placa: 'MNO-333', transportista: 'Cargas del Norte', producto: 'Varilla Corrugada', history: [
-                    { stage: STAGES[0], startTime: new Date(now.getTime() - 10 * 60000), endTime: null },
+                    { stage: STAGES[5], startTime: new Date(now.getTime() - 10 * 60000), endTime: null },
                 ]},
                 { placa: 'ABC-123', transportista: 'Transportes Veloz', producto: 'Alambre Recocido', history: [
-                    { stage: STAGES[0], startTime: new Date(now.getTime() - 30 * 60000), endTime: new Date(now.getTime() - 25 * 60000) },
+                    { stage: STAGES[5], startTime: new Date(now.getTime() - 30 * 60000), endTime: new Date(now.getTime() - 25 * 60000) },
                     { stage: STAGES[1], startTime: new Date(now.getTime() - 25 * 60000), endTime: null },
                 ]},
                  { placa: 'XYZ-789', transportista: 'Logística Rápida', producto: 'Alambre Recocido', history: [
-                    { stage: STAGES[0], startTime: new Date(now.getTime() - 122 * 60000), endTime: new Date(now.getTime() - 118 * 60000) },
+                    { stage: STAGES[5], startTime: new Date(now.getTime() - 122 * 60000), endTime: new Date(now.getTime() - 118 * 60000) },
                     { stage: STAGES[1], startTime: new Date(now.getTime() - 118 * 60000), endTime: new Date(now.getTime() - 100 * 60000) },
                     { stage: STAGES[2], startTime: new Date(now.getTime() - 100 * 60000), endTime: new Date(now.getTime() - 40 * 60000) },
                     { stage: STAGES[4], startTime: new Date(now.getTime() - 40 * 60000), endTime: null },
                 ]},
             ];
+            
+            const fictitiousAvgStageTimes = {
+                'Portón de entrada': 8, 'Báscula Entrada': 12, 'Zona de espera': 25, 'Zona de carga': 35, 'Zona de descarga': 35, 'Báscula Salida': 10
+            };
 
             function generateHistoricalData(days) {
                 const data = [];
@@ -309,10 +354,6 @@
                 mensual: generateHistoricalData(30)
             };
             
-            const fictitiousAvgStageTimes = {
-                [STAGES[0]]: 8, [STAGES[1]]: 12, [STAGES[2]]: 25, [STAGES[3]]: 35, [STAGES[4]]: 35, [STAGES[5]]: 10
-            };
-
             let truckEntryChart = null;
             let currentTimeFilter = 'hoy';
             let currentCarrierFilter = 'todos';
@@ -414,7 +455,7 @@
                 document.getElementById('kpi-max-wait').innerHTML = `${Math.round(maxWait)} <span class="text-2xl text-gray-400">min</span>`;
                 document.getElementById('kpi-sla-percent').textContent = `${trucksInPeriod > 0 ? ((trucksOutOfSla / trucksInPeriod) * 100).toFixed(1) : 0}%`;
 
-                STAGES.forEach((stage, i) => {
+                Object.keys(fictitiousAvgStageTimes).forEach(stage => {
                     const id = `kpi-avg-${stage.toLowerCase().replace(/ /g, '-').replace('á', 'a')}`;
                     const elem = document.getElementById(id);
                     if (elem) elem.textContent = `${fictitiousAvgStageTimes[stage]} min`;
@@ -506,7 +547,8 @@
                 const truck = currentlyDisplayedData[truckIndex];
                 
                 let detailHTML = '<div class="flex justify-around items-center p-3 text-center w-full">';
-                STAGES.forEach(stageName => {
+                const allStageNames = ['Portón de entrada', 'Báscula Entrada', 'Zona de espera', 'Zona de carga', 'Zona de descarga', 'Báscula Salida'];
+                allStageNames.forEach(stageName => {
                     const event = truck.history.find(h => h.stage === stageName);
                     let timeHTML = '-';
                     if (event) {
@@ -522,7 +564,7 @@
                             <p class="text-xs text-gray-500">${stageName.replace('de ', '').replace('Zona ', '')}</p>
                             <p class="font-bold text-lg">${timeHTML}</p>
                         </div>
-                        ${stageName !== STAGES[STAGES.length - 1] ? '<div class="text-gray-300">&rarr;</div>' : ''}
+                        ${stageName !== allStageNames[allStageNames.length - 1] ? '<div class="text-gray-300">→</div>' : ''}
                     `;
                 });
                 detailHTML += '</div>';
@@ -540,10 +582,69 @@
                 const seconds = totalSeconds % 60;
                 return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
+            
+            const mapTooltip = document.getElementById('map-tooltip');
+            
+            function updateTooltipContent(stageIndex) {
+                if (!mapTooltip) return;
+
+                const stageName = STAGES[stageIndex];
+                const trucksInStage = currentlyDisplayedData.filter(truck => truck.history[truck.history.length - 1].stage === stageName);
+                
+                let content = `<h4>${stageName}</h4>`;
+                if (trucksInStage.length > 0) {
+                    content += '<ul>';
+                    trucksInStage.forEach(truck => {
+                        // --- INICIO DE MODIFICACIÓN: HTML DEL TOOLTIP ---
+                        // Se añade la clase 'gap-4' al div contenedor para crear espacio.
+                        content += `
+                            <li>
+                                <div class="flex justify-between items-center gap-4">
+                                    <span class="placa">${truck.placa}</span>
+                                    <div class="text-right">
+                                        <div class="timers">T. Etapa: <span id="tooltip-stagetime-${truck.placa}">00:00:00</span></div>
+                                        <div class="timers">T. Total: <span id="tooltip-totaltime-${truck.placa}">00:00:00</span></div>
+                                    </div>
+                                </div>
+                            </li>
+                        `;
+                        // --- FIN DE MODIFICACIÓN: HTML DEL TOOLTIP ---
+                    });
+                    content += '</ul>';
+                } else {
+                    content += '<p class="text-sm text-gray-400">No hay camiones en esta etapa.</p>';
+                }
+                mapTooltip.innerHTML = content;
+            }
+
+            STAGES.forEach((stage, index) => {
+                const indicator = document.getElementById(`map-indicator-${index}`);
+                if (!indicator) return;
+
+                indicator.addEventListener('mouseenter', () => {
+                    updateTooltipContent(index);
+                    mapTooltip.style.display = 'block';
+                });
+
+                indicator.addEventListener('mouseleave', () => {
+                    mapTooltip.style.display = 'none';
+                });
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (mapTooltip.style.display === 'block') {
+                    mapTooltip.style.left = e.pageX + 15 + 'px';
+                    mapTooltip.style.top = e.pageY + 15 + 'px';
+                }
+            });
 
             function updateLiveTimers() {
                 if (currentTimeFilter !== 'hoy') return;
                 let maxWait = 0;
+                
+                const stageSlaStatus = {};
+                const slaStatusPriority = { 'green': 0, 'amber': 1, 'red': 2 };
+                STAGES.forEach(stage => stageSlaStatus[stage] = 'green');
 
                 currentlyDisplayedData.forEach(truck => {
                     const totalTimeMs = new Date() - truck.history[0].startTime;
@@ -552,7 +653,7 @@
 
                     const totalTimeElem = document.getElementById(`total-time-${truck.placa}`);
                     if (totalTimeElem) totalTimeElem.textContent = formatDuration(totalTimeMs);
-
+                    
                     const currentStage = truck.history[truck.history.length - 1];
                     const currentStageTimeMs = new Date() - currentStage.startTime;
                     const currentStageTimeElem = document.getElementById(`current-stage-time-${truck.placa}`);
@@ -561,7 +662,13 @@
                     const detailTimerElem = document.getElementById(`timer-${truck.placa}-${currentStage.stage.replace(/\s/g, '')}`);
                     if (detailTimerElem) detailTimerElem.textContent = formatDuration(currentStageTimeMs);
 
+                    const tooltipStageTimeElem = document.getElementById(`tooltip-stagetime-${truck.placa}`);
+                    if (tooltipStageTimeElem) tooltipStageTimeElem.textContent = formatDuration(currentStageTimeMs);
+                    const tooltipTotalTimeElem = document.getElementById(`tooltip-totaltime-${truck.placa}`);
+                    if (tooltipTotalTimeElem) tooltipTotalTimeElem.textContent = formatDuration(totalTimeMs);
+                    
                     const slaCell = document.getElementById(`sla-cell-${truck.placa}`);
+                    let currentSlaStatus = 'green';
                     if (slaCell) {
                         const row = slaCell.parentElement;
                         let slaClass, slaIcon;
@@ -569,19 +676,35 @@
                             slaClass = 'bg-sla-red text-white';
                             slaIcon = 'x-circle';
                             row.classList.add('blinking-row');
+                            currentSlaStatus = 'red';
                         } else if (totalTimeMinutes >= 45) {
                             slaClass = 'bg-sla-amber text-white';
                             slaIcon = 'alert-triangle';
                             row.classList.remove('blinking-row');
+                            currentSlaStatus = 'amber';
                         } else {
                             slaClass = 'bg-sla-green text-sla-green';
                             slaIcon = 'check-circle';
                             row.classList.remove('blinking-row');
+                            currentSlaStatus = 'green';
                         }
                         slaCell.innerHTML = `<span class="p-2 rounded-full inline-block ${slaClass}"><i data-lucide="${slaIcon}" class="w-5 h-5 mx-auto"></i></span>`;
                     }
+                    
+                    if (slaStatusPriority[currentSlaStatus] > slaStatusPriority[stageSlaStatus[currentStage.stage]]) {
+                        stageSlaStatus[currentStage.stage] = currentSlaStatus;
+                    }
                 });
                 
+                STAGES.forEach((stage, index) => {
+                    const indicator = document.getElementById(`map-indicator-${index}`);
+                    if (indicator) {
+                        const slaClass = `bg-sla-map-${stageSlaStatus[stage]}`;
+                        indicator.classList.remove('bg-sla-map-green', 'bg-sla-map-amber', 'bg-sla-map-red');
+                        indicator.classList.add(slaClass);
+                    }
+                });
+
                 document.getElementById('kpi-max-wait').innerHTML = `${Math.floor(maxWait)} <span class="text-2xl text-gray-400">min</span>`;
                 lucide.createIcons();
             }
