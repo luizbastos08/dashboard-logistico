@@ -41,6 +41,22 @@
         .truck-row { cursor: pointer; }
         .detail-row td { background-color: #f8f9fa; padding: 1rem; }
         .dropdown:hover .dropdown-menu { display: block; }
+        .map-indicator {
+            position: absolute;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            background-color: rgba(0, 163, 168, 0.63);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 <body class="text-deacero-dark">
@@ -68,11 +84,11 @@
                     <div class="relative dropdown">
                         <button id="carrier-filter-btn" class="filter-btn flex items-center gap-2 bg-white/10 p-2 rounded-lg transition-colors duration-300">
                             <i data-lucide="truck" class="w-5 h-5 text-deacero-turquoise"></i>
-                            <span id="carrier-filter-text">Transportistas: Todos</span>
+                            <span id="carrier-filter-text">Todos</span>
                             <i data-lucide="chevron-down" class="w-4 h-4"></i>
                         </button>
                         <ul id="carrier-filter-menu" class="dropdown-menu absolute hidden bg-white text-deacero-dark w-48 rounded-lg shadow-xl py-1">
-                            <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="todos">Transportistas: Todos</a></li>
+                            <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="todos">Todos</a></li>
                             <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="Transportes Veloz">Transportes Veloz</a></li>
                             <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="Logística Rápida">Logística Rápida</a></li>
                             <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="Cargas del Norte">Cargas del Norte</a></li>
@@ -83,11 +99,11 @@
                     <div class="relative dropdown">
                         <button id="product-filter-btn" class="filter-btn flex items-center gap-2 bg-white/10 p-2 rounded-lg transition-colors duration-300">
                             <i data-lucide="package" class="w-5 h-5 text-deacero-turquoise"></i>
-                            <span id="product-filter-text">Productos: Todos</span>
+                            <span id="product-filter-text">Todos</span>
                             <i data-lucide="chevron-down" class="w-4 h-4"></i>
                         </button>
                         <ul id="product-filter-menu" class="dropdown-menu absolute hidden bg-white text-deacero-dark w-48 rounded-lg shadow-xl py-1">
-                            <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="todos">Productos: Todos</a></li>
+                            <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="todos">Todos</a></li>
                             <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="Varilla Corrugada">Varilla Corrugada</a></li>
                             <li><a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100" data-filter="Alambre Recocido">Alambre Recocido</a></li>
                         </ul>
@@ -105,7 +121,7 @@
 
             <!-- Fila de KPI Cards Principales -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-deacero-turquoise">
+                 <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-deacero-turquoise">
                     <div class="flex items-center justify-between">
                         <div>
                             <p id="kpi-total-trucks-label" class="text-sm font-medium text-gray-500">Camiones en Planta</p>
@@ -152,44 +168,47 @@
             </div>
 
             <!-- Fila de KPIs de Tiempos Promedio por Etapa -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
                 <h2 class="text-xl font-semibold col-span-full">Tiempos Promedio por Etapa</h2>
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
                     <div class="bg-blue-100 p-3 rounded-lg"><i data-lucide="log-in" class="w-6 h-6 text-blue-500"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Promedio en Portón</p>
-                        <p id="kpi-avg-porton" class="text-2xl font-bold text-deacero-dark">0 min</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Portón</p><p id="kpi-avg-porton" class="text-2xl font-bold text-deacero-dark">0 min</p></div>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
                     <div class="bg-green-100 p-3 rounded-lg"><i data-lucide="scale" class="w-6 h-6 text-green-500"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Promedio en Báscula-IN</p>
-                        <p id="kpi-avg-bascula-in" class="text-2xl font-bold text-deacero-dark">0 min</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Báscula Entrada</p><p id="kpi-avg-bascula-entrada" class="text-2xl font-bold text-deacero-dark">0 min</p></div>
+                </div>
+                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
+                    <div class="bg-orange-100 p-3 rounded-lg"><i data-lucide="parking-circle" class="w-6 h-6 text-orange-500"></i></div>
+                    <div><p class="text-sm text-gray-500">Espera</p><p id="kpi-avg-zona-de-espera" class="text-2xl font-bold text-deacero-dark">0 min</p></div>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
                     <div class="bg-yellow-100 p-3 rounded-lg"><i data-lucide="package-search" class="w-6 h-6 text-yellow-500"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Promedio en Carga/Descarga</p>
-                        <p id="kpi-avg-carga" class="text-2xl font-bold text-deacero-dark">0 min</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Carga</p><p id="kpi-avg-zona-de-carga" class="text-2xl font-bold text-deacero-dark">0 min</p></div>
+                </div>
+                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
+                    <div class="bg-indigo-100 p-3 rounded-lg"><i data-lucide="package-open" class="w-6 h-6 text-indigo-500"></i></div>
+                    <div><p class="text-sm text-gray-500">Descarga</p><p id="kpi-avg-zona-de-descarga" class="text-2xl font-bold text-deacero-dark">0 min</p></div>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
                     <div class="bg-purple-100 p-3 rounded-lg"><i data-lucide="log-out" class="w-6 h-6 text-purple-500"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Promedio en Báscula-OUT</p>
-                        <p id="kpi-avg-bascula-out" class="text-2xl font-bold text-deacero-dark">0 min</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Báscula Salida</p><p id="kpi-avg-bascula-salida" class="text-2xl font-bold text-deacero-dark">0 min</p></div>
                 </div>
             </div>
 
             <!-- Fila de Gráficas -->
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
                 <div id="stage-chart-container" class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
-                    <h3 id="stage-chart-title" class="text-lg font-semibold mb-4">Camiones por Etapa</h3>
-                    <div class="relative h-80">
-                        <canvas id="trucksByStageChart"></canvas>
+                    <h3 id="stage-chart-title" class="text-lg font-semibold mb-4">Ubicación de Camiones en Planta</h3>
+                    <div class="relative h-96 w-full bg-gray-100 rounded-lg">
+                        <img src="assets/Mapa de la Planta.png" alt="Mapa de la planta" class="absolute top-0 left-0 w-full h-full object-contain" onerror="this.style.display='none'">
+                        <!-- Indicadores del Mapa -->
+                        <div id="map-indicator-0" class="map-indicator" style="top: 85%; left: 35%;">0</div> <!-- Báscula de salida -->
+                        <div id="map-indicator-1" class="map-indicator" style="top: 65%; left: 43%;">0</div> <!-- Báscula entrada -->
+                        <div id="map-indicator-2" class="map-indicator" style="top: 50%; left: 45%;">0</div> <!-- Zona de espera -->
+                        <div id="map-indicator-3" class="map-indicator" style="top: 50%; left: 60%;">0</div> <!-- Zona de carga --> 
+                        <div id="map-indicator-4" class="map-indicator" style="top: 45%; left: 30%;">0</div> <!-- Zona de descarga --> 
+                        <div id="map-indicator-5" class="map-indicator" style="top: 65%; left: 33%;">0</div> <!-- Portón de entrada --> 
                     </div>
                 </div>
                 <div id="entry-chart-container" class="lg:col-span-3 bg-white p-6 rounded-lg shadow-md">
@@ -212,7 +231,8 @@
                                 <th scope="col" class="px-6 py-3">Placa</th>
                                 <th scope="col" class="px-6 py-3">Transportista</th>
                                 <th scope="col" class="px-6 py-3">Etapa Actual</th>
-                                <th scope="col" class="px-6 py-3">Tiempo Total en Planta</th>
+                                <th scope="col" class="px-6 py-3">Tiempo en Etapa</th>
+                                <th scope="col" class="px-6 py-3">Tiempo Total</th>
                                 <th scope="col" class="px-6 py-3 text-center">SLA</th>
                             </tr>
                         </thead>
@@ -226,15 +246,34 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
+            const STAGES = ['Portón de entrada', 'Báscula Entrada', 'Zona de espera', 'Zona de carga', 'Zona de descarga', 'Báscula Salida'];
+            const now = new Date();
+
             const realTimeTruckData = [
-                { placa: 'GHI-101', transportista: 'Transportes Veloz', producto: 'Varilla Corrugada', etapa: 'Carga/Descarga', stageTimes: { porton: 8, basculaIn: 12, cargaDescarga: 35, basculaOut: null } },
-                { placa: 'JKL-212', transportista: 'Fletes del Sur', producto: 'Varilla Corrugada', etapa: 'Carga/Descarga', stageTimes: { porton: 10, basculaIn: 15, cargaDescarga: 55, basculaOut: null } },
-                { placa: 'MNO-333', transportista: 'Cargas del Norte', producto: 'Varilla Corrugada', etapa: 'Báscula-OUT', stageTimes: { porton: 12, basculaIn: 20, cargaDescarga: 48, basculaOut: 8 } },
-                { placa: 'PQR-444', transportista: 'Transportes Veloz', producto: 'Varilla Corrugada', etapa: 'Carga/Descarga', stageTimes: { porton: 15, basculaIn: 25, cargaDescarga: 65, basculaOut: null } },
-                { placa: 'DEF-456', transportista: 'Cargas del Norte', producto: 'Varilla Corrugada', etapa: 'Portón', stageTimes: { porton: 5, basculaIn: null, cargaDescarga: null, basculaOut: null } },
-                { placa: 'ABC-123', transportista: 'Transportes Veloz', producto: 'Alambre Recocido', etapa: 'Carga/Descarga', stageTimes: { porton: 5, basculaIn: 10, cargaDescarga: 10, basculaOut: null } },
-                { placa: 'XYZ-789', transportista: 'Logística Rápida', producto: 'Alambre Recocido', etapa: 'Báscula-IN', stageTimes: { porton: 7, basculaIn: 5, cargaDescarga: null, basculaOut: null } },
-                { placa: 'STU-555', transportista: 'Logística Rápida', producto: 'Alambre Recocido', etapa: 'Portón', stageTimes: { porton: 15, basculaIn: null, cargaDescarga: null, basculaOut: null } },
+                { placa: 'GHI-101', transportista: 'Transportes Veloz', producto: 'Varilla Corrugada', history: [
+                    { stage: STAGES[0], startTime: new Date(now.getTime() - 65 * 60000), endTime: new Date(now.getTime() - 60 * 60000) },
+                    { stage: STAGES[1], startTime: new Date(now.getTime() - 60 * 60000), endTime: new Date(now.getTime() - 50 * 60000) },
+                    { stage: STAGES[2], startTime: new Date(now.getTime() - 50 * 60000), endTime: new Date(now.getTime() - 20 * 60000) },
+                    { stage: STAGES[3], startTime: new Date(now.getTime() - 20 * 60000), endTime: null },
+                ]},
+                { placa: 'JKL-212', transportista: 'Fletes del Sur', producto: 'Varilla Corrugada', history: [
+                    { stage: STAGES[0], startTime: new Date(now.getTime() - 80 * 60000), endTime: new Date(now.getTime() - 75 * 60000) },
+                    { stage: STAGES[1], startTime: new Date(now.getTime() - 75 * 60000), endTime: new Date(now.getTime() - 65 * 60000) },
+                    { stage: STAGES[2], startTime: new Date(now.getTime() - 65 * 60000), endTime: null },
+                ]},
+                { placa: 'MNO-333', transportista: 'Cargas del Norte', producto: 'Varilla Corrugada', history: [
+                    { stage: STAGES[0], startTime: new Date(now.getTime() - 10 * 60000), endTime: null },
+                ]},
+                { placa: 'ABC-123', transportista: 'Transportes Veloz', producto: 'Alambre Recocido', history: [
+                    { stage: STAGES[0], startTime: new Date(now.getTime() - 30 * 60000), endTime: new Date(now.getTime() - 25 * 60000) },
+                    { stage: STAGES[1], startTime: new Date(now.getTime() - 25 * 60000), endTime: null },
+                ]},
+                 { placa: 'XYZ-789', transportista: 'Logística Rápida', producto: 'Alambre Recocido', history: [
+                    { stage: STAGES[0], startTime: new Date(now.getTime() - 122 * 60000), endTime: new Date(now.getTime() - 118 * 60000) },
+                    { stage: STAGES[1], startTime: new Date(now.getTime() - 118 * 60000), endTime: new Date(now.getTime() - 100 * 60000) },
+                    { stage: STAGES[2], startTime: new Date(now.getTime() - 100 * 60000), endTime: new Date(now.getTime() - 40 * 60000) },
+                    { stage: STAGES[4], startTime: new Date(now.getTime() - 40 * 60000), endTime: null },
+                ]},
             ];
 
             function generateHistoricalData(days) {
@@ -247,37 +286,33 @@
                     date.setDate(today.getDate() - i);
                     const trucksPerDay = 20 + Math.floor(Math.random() * 10);
                     for (let j = 0; j < trucksPerDay; j++) {
-                        const porton = 5 + Math.floor(Math.random() * 10);
-                        const basculaIn = 10 + Math.floor(Math.random() * 15);
-                        const cargaDescarga = 40 + Math.floor(Math.random() * 50);
-                        const basculaOut = 8 + Math.floor(Math.random() * 10);
                         data.push({
                             date: date,
                             transportista: carriers[Math.floor(Math.random() * carriers.length)],
                             producto: products[Math.floor(Math.random() * products.length)],
-                            stageTimes: { porton, basculaIn, cargaDescarga, basculaOut }
+                            stageTimes: { 
+                                [STAGES[0]]: 5 + Math.floor(Math.random() * 10),
+                                [STAGES[1]]: 10 + Math.floor(Math.random() * 15),
+                                [STAGES[2]]: 15 + Math.floor(Math.random() * 30),
+                                [STAGES[3]]: 30 + Math.floor(Math.random() * 40),
+                                [STAGES[4]]: 30 + Math.floor(Math.random() * 40),
+                                [STAGES[5]]: 8 + Math.floor(Math.random() * 10)
+                            }
                         });
                     }
                 }
                 return data;
             }
             
-            function simulateLast24hCompletedCycles() {
-                const cycles = [];
-                const totalCycles = 150 + Math.floor(Math.random() * 50);
-                for (let i = 0; i < totalCycles; i++) {
-                    cycles.push(40 + Math.floor(Math.random() * 80));
-                }
-                return cycles;
-            }
-
             const historicalData = {
                 semanal: generateHistoricalData(7),
-                mensual: generateHistoricalData(30),
-                last24h: simulateLast24hCompletedCycles()
+                mensual: generateHistoricalData(30)
+            };
+            
+            const fictitiousAvgStageTimes = {
+                [STAGES[0]]: 8, [STAGES[1]]: 12, [STAGES[2]]: 25, [STAGES[3]]: 35, [STAGES[4]]: 35, [STAGES[5]]: 10
             };
 
-            let stageChart = null;
             let truckEntryChart = null;
             let currentTimeFilter = 'hoy';
             let currentCarrierFilter = 'todos';
@@ -300,7 +335,7 @@
                     maxWaitCard.style.display = 'block';
                     maxWaitLabel.textContent = 'Máxima Espera Actual';
                     document.getElementById('kpi-total-trucks-label').textContent = 'Camiones en Planta';
-                    document.getElementById('stage-chart-title').textContent = 'Camiones por Etapa (Actual)';
+                    document.getElementById('stage-chart-title').textContent = 'Ubicación de Camiones en Planta';
                 } else {
                     data = historicalData[currentTimeFilter];
                     document.getElementById('detail-table-container').style.display = 'none';
@@ -313,12 +348,9 @@
                 }
 
                 let filteredData = data;
-                if (currentCarrierFilter !== 'todos') {
-                    filteredData = filteredData.filter(t => t.transportista === currentCarrierFilter);
-                }
-                if (currentProductFilter !== 'todos') {
-                    filteredData = filteredData.filter(t => t.producto === currentProductFilter);
-                }
+                if (currentCarrierFilter !== 'todos') filteredData = filteredData.filter(t => t.transportista === currentCarrierFilter);
+                if (currentProductFilter !== 'todos') filteredData = filteredData.filter(t => t.producto === currentProductFilter);
+                
                 currentlyDisplayedData = filteredData;
 
                 renderTable(currentlyDisplayedData);
@@ -334,23 +366,19 @@
                 tableBody.innerHTML = '';
 
                 data.forEach((truck, index) => {
-                    const totalTime = Object.values(truck.stageTimes).reduce((sum, time) => sum + (time || 0), 0);
+                    const currentStage = truck.history[truck.history.length - 1];
+                    
                     const row = document.createElement('tr');
                     row.className = 'truck-row border-b';
                     row.dataset.truckIndex = index;
-                    if (totalTime > 90) row.classList.add('blinking-row');
                     
-                    let slaClass = totalTime > 90 ? 'bg-sla-red text-white' : (totalTime >= 45 ? 'bg-sla-amber text-white' : 'bg-sla-green text-sla-green');
-                    let slaIcon = totalTime > 90 ? 'x-circle' : (totalTime >= 45 ? 'alert-triangle' : 'check-circle');
-
                     row.innerHTML = `
                         <td class="px-6 py-4 font-medium whitespace-nowrap">${truck.placa}</td>
                         <td class="px-6 py-4">${truck.transportista}</td>
-                        <td class="px-6 py-4">${truck.etapa}</td>
-                        <td class="px-6 py-4 font-bold">${totalTime} min</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="p-2 rounded-full inline-block ${slaClass}"><i data-lucide="${slaIcon}" class="w-5 h-5 mx-auto"></i></span>
-                        </td>
+                        <td class="px-6 py-4">${currentStage.stage}</td>
+                        <td class="px-6 py-4 font-bold" id="current-stage-time-${truck.placa}"></td>
+                        <td class="px-6 py-4 font-bold" id="total-time-${truck.placa}"></td>
+                        <td class="px-6 py-4 text-center" id="sla-cell-${truck.placa}"></td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -361,63 +389,48 @@
                 let totalCycleTime = 0;
                 let trucksOutOfSla = 0;
                 const trucksInPeriod = data.length;
-
-                const avgStageTimes = { porton: 0, basculaIn: 0, cargaDescarga: 0, basculaOut: 0 };
-                const stageCounts = { porton: 0, basculaIn: 0, cargaDescarga: 0, basculaOut: 0 };
-
-                data.forEach(truck => {
-                    const time = Object.values(truck.stageTimes).reduce((s, t) => s + (t || 0), 0);
-                    totalCycleTime += time;
-                    if (time > 90) trucksOutOfSla++;
-                    if (time > maxWait) maxWait = time;
-
-                    for (const stage in truck.stageTimes) {
-                        if (truck.stageTimes[stage] !== null) {
-                            avgStageTimes[stage] += truck.stageTimes[stage];
-                            stageCounts[stage]++;
-                        }
-                    }
-                });
                 
                 let avgCycle;
                 if (currentTimeFilter === 'hoy') {
-                    const last24hCycles = historicalData.last24h;
-                    avgCycle = last24hCycles.length > 0 ? Math.round(last24hCycles.reduce((a, b) => a + b, 0) / last24hCycles.length) : 0;
+                    data.forEach(truck => {
+                        const time = (new Date() - truck.history[0].startTime) / 60000;
+                        totalCycleTime += time;
+                        if (time > 90) trucksOutOfSla++;
+                        if (time > maxWait) maxWait = time;
+                    });
+                     avgCycle = trucksInPeriod > 0 ? Math.round(totalCycleTime / trucksInPeriod) : 0;
                 } else {
+                     data.forEach(truck => {
+                        const time = Object.values(truck.stageTimes).reduce((s,t) => s + t, 0);
+                        totalCycleTime += time;
+                        if (time > 90) trucksOutOfSla++;
+                        if (time > maxWait) maxWait = time;
+                    });
                     avgCycle = trucksInPeriod > 0 ? Math.round(totalCycleTime / trucksInPeriod) : 0;
                 }
-
+                
                 document.getElementById('kpi-total-trucks').textContent = trucksInPeriod;
                 document.getElementById('kpi-avg-cycle').innerHTML = `${avgCycle} <span class="text-2xl text-gray-400">min</span>`;
-                document.getElementById('kpi-max-wait').innerHTML = `${maxWait} <span class="text-2xl text-gray-400">min</span>`;
-                const slaPercent = trucksInPeriod > 0 ? ((trucksOutOfSla / trucksInPeriod) * 100).toFixed(1) : 0;
-                document.getElementById('kpi-sla-percent').textContent = `${slaPercent}%`;
+                document.getElementById('kpi-max-wait').innerHTML = `${Math.round(maxWait)} <span class="text-2xl text-gray-400">min</span>`;
+                document.getElementById('kpi-sla-percent').textContent = `${trucksInPeriod > 0 ? ((trucksOutOfSla / trucksInPeriod) * 100).toFixed(1) : 0}%`;
 
-                document.getElementById('kpi-avg-porton').textContent = `${stageCounts.porton > 0 ? Math.round(avgStageTimes.porton / stageCounts.porton) : 0} min`;
-                document.getElementById('kpi-avg-bascula-in').textContent = `${stageCounts.basculaIn > 0 ? Math.round(avgStageTimes.basculaIn / stageCounts.basculaIn) : 0} min`;
-                document.getElementById('kpi-avg-carga').textContent = `${stageCounts.cargaDescarga > 0 ? Math.round(avgStageTimes.cargaDescarga / stageCounts.cargaDescarga) : 0} min`;
-                document.getElementById('kpi-avg-bascula-out').textContent = `${stageCounts.basculaOut > 0 ? Math.round(avgStageTimes.basculaOut / stageCounts.basculaOut) : 0} min`;
+                STAGES.forEach((stage, i) => {
+                    const id = `kpi-avg-${stage.toLowerCase().replace(/ /g, '-').replace('á', 'a')}`;
+                    const elem = document.getElementById(id);
+                    if (elem) elem.textContent = `${fictitiousAvgStageTimes[stage]} min`;
+                });
             }
 
             function renderCharts(data) {
                 if (currentTimeFilter === 'hoy') {
                     const stageDistribution = data.reduce((acc, truck) => {
-                        acc[truck.etapa] = (acc[truck.etapa] || 0) + 1;
+                        const currentStage = truck.history[truck.history.length - 1].stage;
+                        acc[currentStage] = (acc[currentStage] || 0) + 1;
                         return acc;
                     }, {});
-                    if (stageChart) stageChart.destroy();
-                    stageChart = new Chart(document.getElementById('trucksByStageChart').getContext('2d'), {
-                        type: 'bar',
-                        data: {
-                            labels: ['Etapas'],
-                            datasets: [
-                                { label: 'Portón', data: [stageDistribution['Portón'] || 0], backgroundColor: '#80cbc4' },
-                                { label: 'Báscula-IN', data: [stageDistribution['Báscula-IN'] || 0], backgroundColor: '#26a69a' },
-                                { label: 'Carga/Descarga', data: [stageDistribution['Carga/Descarga'] || 0], backgroundColor: '#009688' },
-                                { label: 'Báscula-OUT', data: [stageDistribution['Báscula-OUT'] || 0], backgroundColor: '#04bcb4' }
-                            ]
-                        },
-                        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, display: false } } }
+                    STAGES.forEach((stage, index) => {
+                        const indicator = document.getElementById(`map-indicator-${index}`);
+                        if(indicator) indicator.textContent = stageDistribution[stage] || 0;
                     });
                 }
 
@@ -425,10 +438,7 @@
                 if (currentTimeFilter === 'hoy') {
                     entryChartTitle = 'Ingresos por Hora (24h)';
                     const hourlyEntries = Array(24).fill(0);
-                    // This is a simulation. In a real scenario, you'd use real entry timestamps.
-                    for(let i=0; i < (150 + Math.random() * 50); i++) {
-                        hourlyEntries[Math.floor(Math.random() * 24)]++;
-                    }
+                    for(let i=0; i < (15 + Math.random() * 10); i++) hourlyEntries[Math.floor(Math.random() * 24)]++;
                     const labels = Array.from({length: 24}, (_, i) => {
                         const date = new Date();
                         date.setHours(date.getHours() - (23 - i));
@@ -436,7 +446,6 @@
                     });
                     entryData = { labels: labels, counts: hourlyEntries };
                     xAxisConfig = { type: 'category' };
-
                 } else {
                     entryChartTitle = 'Ingresos por Día';
                     const groupedByDay = data.reduce((acc, truck) => {
@@ -445,11 +454,7 @@
                         acc[day]++;
                         return acc;
                     }, {});
-
-                    entryData = Object.keys(groupedByDay).map(day => ({
-                        x: new Date(day),
-                        y: groupedByDay[day]
-                    })).sort((a, b) => a.x - b.x);
+                    entryData = Object.keys(groupedByDay).map(day => ({ x: new Date(day), y: groupedByDay[day] })).sort((a, b) => a.x - b.x);
                     xAxisConfig = { type: 'time', time: { unit: currentTimeFilter === 'mensual' ? 'week' : 'day' } };
                 }
 
@@ -459,23 +464,9 @@
                     type: 'bar',
                     data: {
                         labels: currentTimeFilter === 'hoy' ? entryData.labels : undefined,
-                        datasets: [{
-                            label: 'Nº de Camiones',
-                            data: currentTimeFilter === 'hoy' ? entryData.counts : entryData,
-                            backgroundColor: 'rgba(4, 188, 180, 0.5)',
-                            borderColor: '#04bcb4',
-                            borderWidth: 1
-                        }]
+                        datasets: [{ label: 'Nº de Camiones', data: currentTimeFilter === 'hoy' ? entryData.counts : entryData, backgroundColor: 'rgba(4, 188, 180, 0.5)', borderColor: '#04bcb4', borderWidth: 1 }]
                     },
-                    options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false, 
-                        plugins: { legend: { display: false } }, 
-                        scales: { 
-                            x: xAxisConfig,
-                            y: { beginAtZero: true, title: { display: true, text: 'Nº de Camiones' } } 
-                        } 
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: xAxisConfig, y: { beginAtZero: true, title: { display: true, text: 'Nº de Camiones' } } } }
                 });
             }
 
@@ -513,26 +504,89 @@
 
                 const truckIndex = row.dataset.truckIndex;
                 const truck = currentlyDisplayedData[truckIndex];
-                const { porton, basculaIn, cargaDescarga, basculaOut } = truck.stageTimes;
+                
+                let detailHTML = '<div class="flex justify-around items-center p-3 text-center w-full">';
+                STAGES.forEach(stageName => {
+                    const event = truck.history.find(h => h.stage === stageName);
+                    let timeHTML = '-';
+                    if (event) {
+                        if (event.endTime) {
+                            const duration = (event.endTime - event.startTime);
+                            timeHTML = `${Math.floor(duration/60000)} min`;
+                        } else {
+                            timeHTML = `<span id="timer-${truck.placa}-${stageName.replace(/\s/g, '')}"></span>`;
+                        }
+                    }
+                    detailHTML += `
+                        <div>
+                            <p class="text-xs text-gray-500">${stageName.replace('de ', '').replace('Zona ', '')}</p>
+                            <p class="font-bold text-lg">${timeHTML}</p>
+                        </div>
+                        ${stageName !== STAGES[STAGES.length - 1] ? '<div class="text-gray-300">&rarr;</div>' : ''}
+                    `;
+                });
+                detailHTML += '</div>';
 
                 const detailRow = document.createElement('tr');
                 detailRow.className = 'detail-row';
-                detailRow.innerHTML = `
-                    <td colspan="5">
-                        <div class="flex justify-around items-center p-3 text-center">
-                            <div><p class="text-xs text-gray-500">Portón</p><p class="font-bold text-lg">${porton !== null ? porton + ' min' : '-'}</p></div>
-                            <div class="text-gray-300">&rarr;</div>
-                            <div><p class="text-xs text-gray-500">Báscula-IN</p><p class="font-bold text-lg">${basculaIn !== null ? basculaIn + ' min' : '-'}</p></div>
-                            <div class="text-gray-300">&rarr;</div>
-                            <div><p class="text-xs text-gray-500">Carga/Descarga</p><p class="font-bold text-lg">${cargaDescarga !== null ? cargaDescarga + ' min' : '-'}</p></div>
-                            <div class="text-gray-300">&rarr;</div>
-                            <div><p class="text-xs text-gray-500">Báscula-OUT</p><p class="font-bold text-lg">${basculaOut !== null ? basculaOut + ' min' : '-'}</p></div>
-                        </div>
-                    </td>
-                `;
+                detailRow.innerHTML = `<td colspan="6">${detailHTML}</td>`;
                 row.insertAdjacentElement('afterend', detailRow);
             });
             
+            function formatDuration(ms) {
+                const totalSeconds = Math.floor(ms / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            function updateLiveTimers() {
+                if (currentTimeFilter !== 'hoy') return;
+                let maxWait = 0;
+
+                currentlyDisplayedData.forEach(truck => {
+                    const totalTimeMs = new Date() - truck.history[0].startTime;
+                    const totalTimeMinutes = totalTimeMs / 60000;
+                    if (totalTimeMinutes > maxWait) maxWait = totalTimeMinutes;
+
+                    const totalTimeElem = document.getElementById(`total-time-${truck.placa}`);
+                    if (totalTimeElem) totalTimeElem.textContent = formatDuration(totalTimeMs);
+
+                    const currentStage = truck.history[truck.history.length - 1];
+                    const currentStageTimeMs = new Date() - currentStage.startTime;
+                    const currentStageTimeElem = document.getElementById(`current-stage-time-${truck.placa}`);
+                    if (currentStageTimeElem) currentStageTimeElem.textContent = formatDuration(currentStageTimeMs);
+                    
+                    const detailTimerElem = document.getElementById(`timer-${truck.placa}-${currentStage.stage.replace(/\s/g, '')}`);
+                    if (detailTimerElem) detailTimerElem.textContent = formatDuration(currentStageTimeMs);
+
+                    const slaCell = document.getElementById(`sla-cell-${truck.placa}`);
+                    if (slaCell) {
+                        const row = slaCell.parentElement;
+                        let slaClass, slaIcon;
+                        if (totalTimeMinutes > 90) {
+                            slaClass = 'bg-sla-red text-white';
+                            slaIcon = 'x-circle';
+                            row.classList.add('blinking-row');
+                        } else if (totalTimeMinutes >= 45) {
+                            slaClass = 'bg-sla-amber text-white';
+                            slaIcon = 'alert-triangle';
+                            row.classList.remove('blinking-row');
+                        } else {
+                            slaClass = 'bg-sla-green text-sla-green';
+                            slaIcon = 'check-circle';
+                            row.classList.remove('blinking-row');
+                        }
+                        slaCell.innerHTML = `<span class="p-2 rounded-full inline-block ${slaClass}"><i data-lucide="${slaIcon}" class="w-5 h-5 mx-auto"></i></span>`;
+                    }
+                });
+                
+                document.getElementById('kpi-max-wait').innerHTML = `${Math.floor(maxWait)} <span class="text-2xl text-gray-400">min</span>`;
+                lucide.createIcons();
+            }
+
+            setInterval(updateLiveTimers, 1000);
             updateDashboard();
         });
     </script>
